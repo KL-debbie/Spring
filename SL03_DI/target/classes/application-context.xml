@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 	RecordImpl recordImpl = new RecordImpl(); -->
+	<bean id="recordImpl" class="org.doit.ik.di.RecordImpl"></bean>
+	
+<!-- 	RecordViewImpl rvi = new RecordViewImpl(); -->
+
+	<!-- 생성자 통해서 주입 
+	<bean id="rvi" class="org.doit.ik.di.RecordViewImpl">
+	<constructor-arg ref="recordImpl" />   
+	<constructor-arg><ref bean="recordImpl"></ref></constructor-arg> 자식태그 
+	</bean> -->
+	
+<!-- 	Setter 통해 주입 -->
+	<bean id="rvi" class="org.doit.ik.di.RecordViewImpl">
+<!-- 		<property name="record" ref="recordImpl"></property> -->
+<!-- 		name="record" setter의 이름 -->
+		<property name="record"><ref bean="recordImpl" /></property>
+	</bean>
+
+</beans>
