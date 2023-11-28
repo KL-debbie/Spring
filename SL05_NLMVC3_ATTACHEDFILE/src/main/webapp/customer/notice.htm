@@ -1,0 +1,28 @@
+ 첨부파일 업로드/다운로드
+ 
+1. p438
+servlet-context.xml >
+<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="-1"></beans:property>
+		<beans:property name="maxInMemorySize" value="10240"></beans:property>
+		<beans:property name="defaultEncoding" value="ISO-8859-1"></beans:property>
+</beans:bean> 등록
+	
+2. P442 업로드 파일에 접근하는 방법
+1) MultipartFile 인터페이스 사용
+2) @RequestParam 사용
+3) MultipartHttpServletRequest
+4) **** 커맨드 객체를 통한 파일 접근 ****
+  NoticeVO notice == 제목, 내용, 첨부파일
+  
+NoticeVo.java > private CommonsMultipartFile file; 추가
+
+5) 컨트롤러 메서드 수정
+
+3. 공지사항 상세보기 noticeDetail.jsp
+삭제 클릭 시 첨부파일 유무 확인 후 삭제
+
+4. 공지사항 수정
+파일 O -> 파일 X   원래있던 파일 삭제
+파일 X -> 파일 O   파일 저장
+파일 O -> 파일 O   원래파일 삭제, 첨부 파일 저장
