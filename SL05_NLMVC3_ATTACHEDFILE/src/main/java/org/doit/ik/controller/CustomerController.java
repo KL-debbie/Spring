@@ -207,6 +207,7 @@ public class CustomerController {
 		return "noticeDetail.jsp";
 	}
 
+	// 목록보기
 	@GetMapping(value = "notice.htm")
 	public String notice(@RequestParam(value = "page", defaultValue = "1") int page
 			, @RequestParam(value = "field", defaultValue = "title") String field
