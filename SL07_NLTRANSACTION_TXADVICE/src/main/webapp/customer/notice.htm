@@ -1,0 +1,24 @@
+SL07_NLTRANSACTION_TXADVICE
+
+1. 스프링 트랜잭션 처리 3가지
+1) 코드기반 SL07_NLTRANSACTION_TEMPLATE
+2) 선언적 SL07_NLTRANSACTION_TXADVICE 522p
+
+servlet-context
+<!-- 	p522 선언적 트랜잭션 처리 방법 중 1. tx:advice선언 -->
+
+	<tx:advice id = "txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+<!-- 			<tx:method name="order" propagation = "REQUIRED" /> -->
+<!-- 			<tx:method name="get*" read-only="true" /> -->
+			<tx:method name="insertAndPointUpOfMember" propagation="REQUIRED" isolation="DEFAULT" read-only="false" timeout="-1" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(public void insertAndPointUpOfMember(*,*) )"  id="insertOrM"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="insertOrM"/>
+	</aop:config>
+	
+추가
+
