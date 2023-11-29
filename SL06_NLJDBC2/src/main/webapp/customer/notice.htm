@@ -1,0 +1,19 @@
+SL06_NLJDBC2 프로젝트
+
+1. namedParameterJdbcTemplate 객체 사용
+root-context.xml 수정
+   <bean class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate" id="namedParameterJdbcTemplate">
+<!--    		<property name="dataSource"  ref="dataSource" /> -->
+		<constructor-arg ref="dataSource"></constructor-arg>
+   </bean>
+
+
+2. org.doit.ik.persistence > DAO
+MemberDao  > 인터페이스변환
+  MemberDaoImpl  > 클래스
+NoticeDao    > 인터페이스
+  NoticeDaoImpl    > 클래스
+
+3. index.jsp > *.htm 요청 받도록 HomeController 수정
+
+4. org.doit.ik.controller >  JoinController  추가(회원가입 요청, 로그인)
