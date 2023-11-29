@@ -1,0 +1,53 @@
+p474 Chapter 11. 데이터베이스 연동 지원과 JDBC 지원(스프링 JDBC)
+
+1. DataSource 설정방법 root-context.xml
+1) pom.xml 모듈 추가
+
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-jdbc</artifactId>
+         <version>${org.springframework-version}</version>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-tx</artifactId>
+         <version>${org.springframework-version}</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP p83 -->
+      <dependency>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+          <version>5.0.1</version>
+      </dependency>
+
+
+2) root-context.xml 확인
+
+  <!-- p84 -->
+   <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+     <!--    p102
+     <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+     <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE"></property>
+      -->
+      
+     <property name="driverClassName"    value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+     <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe"></property>
+     <property name="username" value="scott"></property>
+     <property name="password" value="tiger"></property> 
+
+2. JdbcTemplate 클래스 + 스프링
+root-context.xml 에 클래스 추가
+<!--    p486 JdbcTemplate -->
+	<bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+select : query(), queryForList(), queryForObject()
+insert, delete, update : update() 
+
+<context:component-scan base-package="org.doit.ik" /> + 하위 패키지 자동 스캔 > @Component
+DB연동 Component > @Repository   DAO 역할 Component
+@Controller Controller 역할
+@Service     Service 역할
