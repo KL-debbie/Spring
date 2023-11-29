@@ -1,0 +1,43 @@
+SL07_NLTRANSACTION4_PROPAGATION
+
+p511-2 표 확인/*** 트랜잭션 전파와 격리 레벨
+전파 방식 > 트랜잭션 진행 중에 또 다른 새로운 트랜잭션이 처리되어야 할 경우
+
+@T(P=R) 
+aaa()
+{
+	x; // insert
+	bbb();
+	y; // update
+}
+
+@T(P=R) aaa() @T(P=R) 없으면 bbb()만 롤백 
+bbb(){
+z
+z1 : aaa() @T(P=R) 있으면 전체 롤백 
+}
+
+@T(P=RN)  새로운 트랜잭션이므로 bbb만 커밋/롤백 , 기존 트랜잭션은 중지됨, 별개의 트랜잭션,, 
+bbb(){
+z
+z1  
+}
+
+-----------------------------------------------------------------------------------------------------
+실습
+
+insertAndPointUpOfMember > @T 공지사항등록 insert + 포인트 증가 update
+> 메서드 수정
+
+@T 
+insertAndPointUpOfMember()
+{
+	insert(); 
+	insert();
+}
+
+@T
+insert()
+{
+ 공지사항등록 insert + 포인트 증가 update
+}
