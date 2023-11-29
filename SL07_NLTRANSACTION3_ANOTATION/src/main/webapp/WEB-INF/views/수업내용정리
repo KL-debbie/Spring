@@ -1,0 +1,48 @@
+1. org.doit.ik.domain
+2. org.doit.ik.controller
+3. org.doit.ik.persistence
+4. org.doit.ik.service
+
+5. 테이블 생성 DAO Service 파일\service/ddl.sql
+6. DAO Service 파일\service\newlecture\vo\파일 2개 복사(~~.domain)
+	DAO Service 파일\service\newlecture\dao\ 파일 2개 복사(~~.persistence)
+	수정
+
+7. WebContent > 
+	ㄴ css 폴더
+			customer.css - 공지사항 .css
+			joinus.css - 회원.css
+	ㄴ customer 폴더
+			notice.jsp 공지사항 목록	
+			noticeDetail.jsp 공지사항 상세	
+			noticeEdit.jsp 공지사항 수정	
+			noticeReg.jsp 공지사항 쓰기
+	ㄴ images 폴더
+	ㄴ joinus 폴더
+			join.css 회원가입
+			logon.css 로그인
+			
+			login.jsp 로그인 페이지
+			join.jsp 회원가입
+	ㄴ js
+	 > webapp c+v
+	index.css 메인페이리
+	index.jsp
+	 > webapp c+v
+	 
+8. web.xml url-pattern  *.htm 수정
+
+9. 컨트롤러 메서드 구현 X
+JSP CommandHandler
+	 process 추상메서드
+	 
+	 ListHandler implements CommandHandler
+	 @Override
+	 process{}
+
+10. Controller > NoticeController.java 추가
+> /customer/notice.htm  매핑처리 X (404오류)
+> servlet-context.xml
+
+11. noticeDetail.htm?seq=${dto.seq }  처리작업
+
