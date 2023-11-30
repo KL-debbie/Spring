@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.doit.ik.domain.NoticeVO;
 import org.doit.ik.persistence.NoticeDao;
+import org.doit.ik.service.MemberShipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class CustomerController {
 
 	@Autowired
 	private NoticeDao dao;
+	
+	@Autowired
+	private MemberShipService service;
 
 	//다운로드
 	// ?dir=customer/upload&file=${ notice.filesrc  }
@@ -177,7 +181,8 @@ public class CustomerController {
 		notice.setWriter("msms");
 
 		// int insertcnt = this.dao.insert(notice);
-		this.dao.insertAndPointUpOfMember(notice, "msms");
+//		this.dao.insertAndPointUpOfMember(notice, "msms");
+		this.service.insertAndPointUpOfMember(notice, "msms");
 		
 		int insertcnt = 1;
 		if (insertcnt ==1) {

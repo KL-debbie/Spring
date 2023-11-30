@@ -41,3 +41,48 @@ insert()
 {
  공지사항등록 insert + 포인트 증가 update
 }
+
+-----------------------------------------------------------------------------------------------------
+
+1)NoticeDaoImpl
+
+	// 6) 전파방식 > insertAndPointUpOfMember 수정
+	@Override
+	//@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED) //메서드 1개만
+	public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
+		
+		insert(notice); // TEST-8 point 2
+		
+		insert(notice); // TEST-8-2 point=3 > 예외
+	}
+
+2) 
+@T XXX
+insertAndPointUpOfMember()
+insert()
+insert()
+
+@T O
+insert()
+
+>>>> rollback X 포인트는 2, test8, test-8-2 작성되어 있음
+
+@T O
+insertAndPointUpOfMember()
+insert()
+insert()
+
+@T O
+insert()
+
+>> test-9, test-9-2 글작성X, point 1 
+이유는 같은 클래스(NoticeDaoImpl) 내에서 다른 메소드를 호출하는 구조(insertAndPointUpOfMember => insert)로는 
+AOP 방식으로 트랜잭션 처리가 되지 않는다는 것입니다. 
+따라서, 이 문제를 해결하려면 별도의 서비스 클래스를 만들어서 그 곳에서 게시글 등록과 포인트 증가 메소드를 호출하도록 해야 합니다.
+(insertAndPointUpOfMember => insert 분리 필요)
+
+3) org.doit.ik.service
+ MemberShipService 인터페이스
+ MemberShipServiceImp 클래스
+ 
+ 4) CustomerController 수정

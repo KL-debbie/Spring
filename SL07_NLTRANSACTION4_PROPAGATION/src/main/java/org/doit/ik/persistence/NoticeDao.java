@@ -29,6 +29,6 @@ public interface NoticeDao {
 	
 	// 트랜잭션 처리하기 위한 메서드 추가
 //	@Transactional 해당 메서드만
-	void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException ;
+	// void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException ;
 	
 }

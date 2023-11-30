@@ -12,16 +12,10 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 
 @Repository //자동으로 @Component 스캔 -빈 객체 생성 + DI
 //@Transactional 클래스 전부
@@ -123,7 +117,31 @@ public class NoticeDaoImpl implements NoticeDao{
 		return this.npJdbcTemplate.queryForObject(sql, parameterSource, new BeanPropertyRowMapper<NoticeVO>(NoticeVO.class) );
 	}
 
-	// 공지사항 추가
+	// 공지사항 추가 + 포인트 증가(트랜잭션전파)
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
+	public int insert(NoticeVO no) throws ClassNotFoundException, SQLException {
+		
+		// 공지사항 쓰기
+				String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
+						+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
+
+				// a
+				SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(no);
+
+				npJdbcTemplate.update(sql,parameterSource );
+
+				String sql2 = "UPDATE member"
+						+ " SET point = point +1 "
+						+ " WHERE id = :id";
+				//b 
+				MapSqlParameterSource paramSource = new MapSqlParameterSource();
+				paramSource.addValue("id", "msms");
+
+				int updatecnt = npJdbcTemplate.update(sql2, paramSource);
+				return updatecnt;
+	}
+	
+	/*  [1] 공지 추가
 	public int insert(NoticeVO no) throws ClassNotFoundException, SQLException {
 
 		String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
@@ -133,8 +151,49 @@ public class NoticeDaoImpl implements NoticeDao{
 
 		return this.npJdbcTemplate.update(sql,parameterSource );
 	}
+	*/
+	
+	// 6) 전파방식 > insertAndPointUpOfMember 수정
+	/*
+	@Override
+	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED) //메서드 1개만
+	public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
+		
+		insert(notice);
+		
+		notice.setTitle( notice.getTitle() +"-2" );
+		insert(notice);
+	}
+	*/
 
-	// 1] 트랜잭션 처리가 안된 메서드
+	// 5 @ 트랜잭션
+		/*
+		@Override
+		@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED) //메서드 1개만
+		public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
+			// 공지사항 쓰기
+			String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
+					+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
+
+			// a
+			SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(notice);
+
+			npJdbcTemplate.update(sql,parameterSource );
+
+			String sql2 = "UPDATE member"
+					+ " SET point = point +1 "
+					+ " WHERE id = :id";
+			//b 
+			MapSqlParameterSource paramSource = new MapSqlParameterSource();
+			paramSource.addValue("id", id);
+
+			int updatecnt = npJdbcTemplate.update(sql2, paramSource);
+
+		}
+		*/
+		
+
+	// 4] 선언적 트랜잭션
 	/*
 	@Override
 	public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
@@ -142,20 +201,55 @@ public class NoticeDaoImpl implements NoticeDao{
 		String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
 				+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
 
+		// a
 		SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(notice);
 
-		this.npJdbcTemplate.update(sql,parameterSource );
-		// 작성자 포인트 증가
-		sql = "UPDATE member"
+		npJdbcTemplate.update(sql,parameterSource );
+
+		String sql2 = "UPDATE member"
 				+ " SET point = point +1 "
 				+ " WHERE id = :id";
+		//b 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
 
-		int updatecnt = this.npJdbcTemplate.update(sql, paramSource);
-	}
-	 */
+		int updatecnt = npJdbcTemplate.update(sql2, paramSource);
+*/
 
+
+
+	// 3] 
+		/*
+		@Override
+		public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
+			// 공지사항 쓰기
+			String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
+					+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
+
+			String sql2 = "UPDATE member"
+					+ " SET point = point +1 "
+					+ " WHERE id = :id";
+
+			// p514
+																					WithoutResult() : 리턴할 결과값이 없는 경우
+			this.transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+				@Override
+				protected void doInTransactionWithoutResult(TransactionStatus status) {
+					// a
+					SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(notice);
+
+					npJdbcTemplate.update(sql,parameterSource );
+
+					//b 
+					MapSqlParameterSource paramSource = new MapSqlParameterSource();
+					paramSource.addValue("id", id);
+
+					int updatecnt = npJdbcTemplate.update(sql2, paramSource);
+				}
+			});
+		 */
+	
 	// 2] 트랜잭션 처리 메서드
 	/*
 	@Override
@@ -196,8 +290,8 @@ public class NoticeDaoImpl implements NoticeDao{
 
 	}
 	 */
-
-	// 3] 
+	
+	// 1] 트랜잭션 처리가 안된 메서드
 	/*
 	@Override
 	public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
@@ -205,76 +299,18 @@ public class NoticeDaoImpl implements NoticeDao{
 		String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
 				+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
 
-		String sql2 = "UPDATE member"
-				+ " SET point = point +1 "
-				+ " WHERE id = :id";
-
-		// p514
-																				WithoutResult() : 리턴할 결과값이 없는 경우
-		this.transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				// a
-				SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(notice);
-
-				npJdbcTemplate.update(sql,parameterSource );
-
-				//b 
-				MapSqlParameterSource paramSource = new MapSqlParameterSource();
-				paramSource.addValue("id", id);
-
-				int updatecnt = npJdbcTemplate.update(sql2, paramSource);
-			}
-		});
-	 */
-
-	// 4] 선언적 트랜잭션
-	/*
-	@Override
-	public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
-		// 공지사항 쓰기
-		String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
-				+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
-
-		// a
 		SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(notice);
 
-		npJdbcTemplate.update(sql,parameterSource );
-
-		String sql2 = "UPDATE member"
+		this.npJdbcTemplate.update(sql,parameterSource );
+		// 작성자 포인트 증가
+		sql = "UPDATE member"
 				+ " SET point = point +1 "
 				+ " WHERE id = :id";
-		//b 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
 
-		int updatecnt = npJdbcTemplate.update(sql2, paramSource);
-*/
-
-	// 5 @ 트랜잭션
-	@Override
-	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED) //메서드 1개만
-	public void insertAndPointUpOfMember(NoticeVO notice, String id) throws ClassNotFoundException, SQLException {
-		// 공지사항 쓰기
-		String sql = "INSERT INTO NOTICES(SEQ, TITLE, CONTENT, WRITER, REGDATE, HIT, FILESRC) "
-				+ "VALUES( (SELECT NVL(MAX(TO_NUMBER(SEQ))+1, 1) FROM NOTICES), :title, :content, :writer, SYSDATE, 0, :filesrc)";
-
-		// a
-		SqlParameterSource parameterSource =new BeanPropertySqlParameterSource(notice);
-
-		npJdbcTemplate.update(sql,parameterSource );
-
-		String sql2 = "UPDATE member"
-				+ " SET point = point +1 "
-				+ " WHERE id = :id";
-		//b 
-		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("id", id);
-
-		int updatecnt = npJdbcTemplate.update(sql2, paramSource);
-
-
+		int updatecnt = this.npJdbcTemplate.update(sql, paramSource);
 	}
+	 */
 
 }
