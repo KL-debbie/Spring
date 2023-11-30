@@ -1,0 +1,22 @@
+1. 스프링 tiles
+
+2. servlet-~ tiles 코딩 확인
+
+3. WEB-INF/tiles/tiles.xml
+
+4.  페이지 모듈화
+webapp > inc폴더 > header,footer,layout.jsp
+           > customer폴더 > inc폴더 > aside, visual,layout.jsp
+           > joinus 폴더 > inc폴더 > aside, visual,layout.jsp
+5. notice.jsp
+header 잘라내기 > jsp이동
+footer 잘라내기 > jsp이동
+:
+
+6. join.jsp 수정
+
+7. 각 controller jsp >>> return customer.~ joinus.~ home.~으로 변경
+
+8. 모든 jsp파일들은 직접 호출 불가하도록 WEB-INF/views/에 넣기
+
+9. tiles.xml 정의
