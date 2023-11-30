@@ -1,0 +1,44 @@
+SL07_NLTRANSACTION5_ISOLATION
+
+p512 
+
+1. 격리레벨
+>> 트랜잭션을 처리하는 과정 속에 두개 이상의 트랜잭션이 동시에 같은 자원을 접근하게 되면
+각각의 트랜잭션 처리를 어떻게 서로 영향 받지 않게 처리할까..?
+
+동시에 트랜잭션이 실행되더라도 서로 영향을 받지 않게 격리 레벨을 설정하면 됨
+
+2. 실습
+멀티 스레드 X
+NoticeDao 인터페이스
+공지사항 상세 보기 - 조회수 증가 hitup()
+getHit()- 조회수를 얻어오는 메서드 추가
+
+3. 용어
+1) Dirty Read 상황  - @Transactional(isolation = Isolation.READ_COMMITTED) X
+seq=10  조회수 5 
+hitup()  // @T
+[      조회수 6                                 커밋, [롤백] ]
+                      getHit()// @T
+                      
+2) Non-repeatable Read 상황 -@Transactional(isolation = Isolation.REPEATABLE_READ) 아닌 경우  
+조건 ) 반드시 2번 조회수를 읽어가는 중에~(같은 일 두번.)
+seq=10  조회수 5
+1) getHit(10)                     2) getHit(10)  >>서로 다른 조회수 값
+           5                                6
+                     hitup(10)
+                         6     
+              
+                  
+3) Phantom Read 상황
+조건 ) 여러 개의 레코드를 한 번에 읽어오는 상황 + 반복
+
+// a작업
+SELECT *
+FROM emp
+WHERE deptno = 30;
+ 
+a작업							a작업		@Transactional(isolation = Isolation.SERIALIZABLE)  >> 작업이 끝난 후 insert,update 등 진행
+6명		insert		30			7
+		update				..
+		delete				5
