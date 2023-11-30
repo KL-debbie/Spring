@@ -10,6 +10,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><tiles:getAsString name="title"></tiles:getAsString></title>
 <link href="notice.css" type="text/css" rel="stylesheet" />
+<!-- <link href="../css/customer.css" type="text/css" rel="stylesheet" /> -->
+
 </head>
 <body>
 	<tiles:insertAttribute name="header" />

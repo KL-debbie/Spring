@@ -31,7 +31,7 @@
 		</div>
 		<p class="article-comment margin-small">
 			<input class="btn-save button" type="submit" value="저장" /> <a
-				class="btn-cancel button" href="notice.htm">취소</a>
+				class="btn-cancel button" href="notice.htm" value="취소" ></a>
 		</p>
 	</form>
 </div>
