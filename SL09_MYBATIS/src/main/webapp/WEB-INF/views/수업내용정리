@@ -1,22 +1,70 @@
-1. 스프링 tiles
+ SL09_MYBATIS  p537 ~ 576 ORM
 
-2. servlet-~ tiles 코딩 확인
+[ #{} ]
 
-3. WEB-INF/tiles/tiles.xml
+파라미터가 String 형태로 들어와 자동적으로 '파라미터'형태가 된다.
 
-4.  페이지 모듈화
-webapp > inc폴더 > header,footer,layout.jsp
-           > customer폴더 > inc폴더 > aside, visual,layout.jsp
-           > joinus 폴더 > inc폴더 > aside, visual,layout.jsp
-5. notice.jsp
-header 잘라내기 > jsp이동
-footer 잘라내기 > jsp이동
-:
+예를 들어, #{user_id}의 user_id 의 값이 abc 라면 쿼리문에는 USER_ID = 'abc'의 형태가 된다.
 
-6. join.jsp 수정
+★쿼리 주입을 예방할 수 있어 보안 측면에서 유리하다.★
 
-7. 각 controller jsp >>> return customer.~ joinus.~ home.~으로 변경
+PreparedStatement 를 생성하게 되는데, 파싱된 쿼리문은 재활용(캐싱)되기 때문에 효율적이다.
 
-8. 모든 jsp파일들은 직접 호출 불가하도록 WEB-INF/views/에 넣기
+​
 
-9. tiles.xml 정의
+[ ${} ]
+
+파라미터가 바로 출력된다.
+
+해당 컬럼의 자료형에 맞추어 파라미터의 자료형이 변경된다.
+
+쿼리 주입을 예방할 수 없아 보안측면에서 불리하다. 그러므로 사용자의 입력을 전달할 때는 사용하지 않는 편이 낫다.
+
+테이블이나 컬럼명을 파라미터로 전달하고 싶을 때 사용한다. #{}은 자동으로 ''가 붙어서 이 경우에는 사용할 수 없다.
+
+
+
+
+p563 MYBATIS 연동 지원
+
+1. 스프링 + MYBATIS 연동
+1) MYBATIS -SPRING 모듈 추가
+
+ <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis p91-->
+      <dependency>
+          <groupId>org.mybatis</groupId>
+          <artifactId>mybatis</artifactId>
+          <version>3.4.6</version>
+      </dependency>
+      
+      <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+      <dependency>
+          <groupId>org.mybatis</groupId>
+          <artifactId>mybatis-spring</artifactId>
+          <version>1.3.2</version>
+      </dependency>
+
+2) SqlSession + FactoryBean을 이용해서 SqlSessionFactory 설정
+
+   <!-- p91 -->
+   <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+     <property name="dataSource" ref="dataSource"></property>
+   </bean>
+
+3) 트랜잭션 설정
+
+   <!-- p508 스프링 트랜잭션을 처리할 JDBC기반의 트랜잭션 관리자 등록
+    Spring JDBC 또는 mybatis DB처리 -->
+   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+     <property name="dataSource"  ref="dataSource" />
+   </bean>
+
+4) MYBATIS를 이용한 DAO 구현
+	ㄴ SqlSession 이용 구현
+	ㄴ 매퍼 동적 생성 이용 구현
+
+ .persistence
+ memberDao, NoticeDao > mapper패키지로 이동, ~Mapper 이름 변경
+ 
+ 
+ 

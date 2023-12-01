@@ -1,10 +1,10 @@
-package org.doit.ik.persistence;
+package org.doit.ik.mapper;
 
 import java.sql.SQLException;
 import org.doit.ik.domain.MemberVO;
 
 
-public interface MemberDao {
+public interface MemberMapper {
 	
 	//회원정보 반환
 	public MemberVO getMember(String id) throws ClassNotFoundException, SQLException;

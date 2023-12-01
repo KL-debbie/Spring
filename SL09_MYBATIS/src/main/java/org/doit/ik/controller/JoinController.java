@@ -1,7 +1,7 @@
 package org.doit.ik.controller;
 
 import org.doit.ik.domain.MemberVO;
-import org.doit.ik.persistence.MemberDao;
+import org.doit.ik.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j;
 public class JoinController {
 	
 	@Autowired
-	private MemberDao memberDao; 
+	private MemberMapper memberDao; 
 	
 	@GetMapping("/login.htm")
 	public String login() throws Exception{

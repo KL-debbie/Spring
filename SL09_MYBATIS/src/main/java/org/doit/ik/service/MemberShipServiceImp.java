@@ -3,9 +3,8 @@ package org.doit.ik.service;
 import java.sql.SQLException;
 
 import org.doit.ik.domain.NoticeVO;
-import org.doit.ik.persistence.NoticeDao;
+import org.doit.ik.mapper.NoticeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 //@Repository
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class MemberShipServiceImp implements MemberShipService{
 	
 	@Autowired
-	private NoticeDao dao;
+	private NoticeMapper dao;
 
 	@Override
 	//@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED) //메서드 1개만

@@ -1,4 +1,4 @@
-package org.doit.ik.persistence;
+package org.doit.ik.mapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.doit.ik.domain.NoticeVO;
 import org.springframework.transaction.annotation.Transactional;
 
 //@Transactional 인터페이스 전부
-public interface NoticeDao {
+public interface NoticeMapper {
 	
 	//  공지사항 총 갯수
 	public int getCount(String field, String query) throws ClassNotFoundException, SQLException;

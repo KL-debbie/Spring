@@ -11,10 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.doit.ik.domain.NoticeVO;
-import org.doit.ik.persistence.NoticeDao;
+import org.doit.ik.mapper.NoticeMapper;
 import org.doit.ik.service.MemberShipService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +30,7 @@ import lombok.extern.log4j.Log4j;
 public class CustomerController {
 
 	@Autowired
-	private NoticeDao dao;
+	private NoticeMapper dao;
 	
 	@Autowired
 	private MemberShipService service;
