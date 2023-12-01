@@ -1,0 +1,12 @@
+p428
+
+1. empno : [7369]    id중복체크
+ename : [      ]
+
+2. HomeController확인
+3. home.jsp 수정
+
+4. domain package >EmpVO
+
+5. MemberMapper 인터페이스
+6. MemberMapper.xml
