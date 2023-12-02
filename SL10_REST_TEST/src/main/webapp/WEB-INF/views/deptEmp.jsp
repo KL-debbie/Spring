@@ -79,6 +79,7 @@
 	  $.ajax({
 		  //        /deptEmp/20
 		  url:`/Emp/\${deptno}`,
+//		  url:`/Emp/\${deptno}`, 백틱기호 잘보자
 		  dataType:"json",
 		  type:"GET", 
 		  //data:params, 
