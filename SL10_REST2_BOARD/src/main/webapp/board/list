@@ -1,0 +1,92 @@
+/board/list
+
+SL02_BOARD3_search > c v
+
+REST 방식과 ajax를 이용하는 댓글 처리
+1. 하나의 게시글에 대한 댓글 구현
+
+2. REST(Representational State Transfer)
+-  네트워크 아키텍처 원리의 모음
+-  네트워크 아키텍처 원리의 모음 ? 자원을 정의하고 자원에 대한 주소를 지정하는 방법
+
+RESTful이란 용어 ? REST 원리를 따르는 시스템
+
+3. 모바일 시대 변화
+[웹]	  				앱, 웹+앱
+[앱]		송/수신 		순수한 XML, JSON 데이터
+
+4. URL<URI   REST
+- 하나의 URI 는 하나의 고유한 자원(Resource)를 대표하도록 설계된다는 개념의 전송 방법(방식)
+
+5. 스프링 REST 방식으로 데이터를 처리하는 어노테이션 제공
+1) @RestController : Controller 인데 REST 방식으로 처리 XML, JSON 순수 데이터 
+2) @RequestBody   : JSON 데이터 > 클랙스 객체 변환(바인딩)
+3) @ResponseBody : JSP와 같은 뷰로 전달 X > 데이터 자체를 전달
+4) @PathVariable   : URL 주소 속에 파라미터 값을 추출해서 사용  
+5) @CrossOrigin    : ajax의 크로스 도메인 문제를 해결해 주는 어노테이션
+
+6. 전송방식 CRUD
+POST		: CREATE(INSERT)	+  /members/new 회원 등록
+GET		: READ(SELECT)		+	/members/{id} 회원 조회
+PUT		: UPDATE				+  /members/{id} + body{json 데이터} 회원 수정
+DELETE	: DELETE				+  /members/{id} 회원 삭제
+: 
+
+7. pom.xml
+
+jackson-databind  :  JSON 데이터를 처리 모듈
+	 <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+         <version>2.9.5</version>
+      </dependency>
+
+jackson-dataformat-xml  :  xml 데이터를 처리 모듈
+      <dependency>
+         <groupId>com.fasterxml.jackson.dataformat</groupId>
+         <artifactId>jackson-dataformat-xml</artifactId>
+         <version>2.9.5</version>
+      </dependency> 
+      
+gson : java 객체를 json문자열로 변환
+      <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+	<dependency>
+	    <groupId>com.google.code.gson</groupId>
+	    <artifactId>gson</artifactId>
+	    <version>2.8.2</version>
+	</dependency>
+      
+8. samplecontroller 예제
+sampleVO
+
+========================================================
+
+9. ajax를 이용 > 게시판 댓글 처리
+10 replyvo
+
+11. ReplyMapper.java
+ReplyMapper.java
+
+12. 서비스 영역 + controller 처리
+org.doit.ik.service. ReplyService, impl
+
+13 web.xml > security 필터 주석처리
+
+14. ReplyController.java > ajax처리(REST 방식)
+작업 : 			URL  					: HTTP전송방식
+등록 : 			/replies/new		: POST
+조회 : 			/replies/:rno		: GET
+삭제 : 			/replies/:rno		: DELETE
+수정 : 			/replies/:rno		: PUT or PATCH 
+
+페이징 처리
+페이지: 		/replies/pages/:bno/:page		: GET
+
+15. get.jsp + 댓글 기능 구현
+
+1) reply.js 
+
+16.get.jsp
+
+
+
