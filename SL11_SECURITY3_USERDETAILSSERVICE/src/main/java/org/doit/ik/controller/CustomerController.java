@@ -3,6 +3,7 @@ package org.doit.ik.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -152,7 +153,7 @@ public class CustomerController {
 
 	// 글 작성
 	@PostMapping(value = "noticeReg.htm")
-	public String noticeReg(NoticeVO notice, HttpServletRequest request) throws ClassNotFoundException, SQLException, IllegalStateException, IOException {
+	public String noticeReg(NoticeVO notice, HttpServletRequest request, Principal principal) throws ClassNotFoundException, SQLException, IllegalStateException, IOException {
 
 		// 1. 첨부된 파일 유무 확인 후 서버에 파일 저장
 		CommonsMultipartFile multipartFile=notice.getFile();
@@ -178,11 +179,11 @@ public class CustomerController {
 		}
 
 		// 작성자 X > 로그인해야만 글 작성 가능 세션사용
-		notice.setWriter("msms");
+		notice.setWriter(principal.getName());  //username == id
 
 		 int insertcnt = this.dao.insert(notice);
 //		this.dao.insertAndPointUpOfMember(notice, "msms");
-//		this.service.insertAndPointUpOfMember(notice, "msms");
+//		this.service.insertAndPointUpOfMember(notice, principal.getName());
 		
 //		int insertcnt = 1;
 		if (insertcnt ==1) {

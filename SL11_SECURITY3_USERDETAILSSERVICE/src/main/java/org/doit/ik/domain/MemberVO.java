@@ -1,6 +1,7 @@
 package org.doit.ik.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,10 +22,14 @@ public class MemberVO {
 	private String cphone;
 	private String email;
 	private String habit;
-	private Date   regdate;
+	private Date regdate;
 	
 	//트랜잭션 처리 테스트를 위해 컬럼 추가
 	private int point;
+	
+	// 권한 정보
+	private boolean enabled;
+	private List<AuthVO> authList;
 	
 	
 }

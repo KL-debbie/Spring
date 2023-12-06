@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div id="content">
 	<h2>공지사항</h2>
 	<h3 class="hidden">방문페이지위치</h3>
@@ -35,10 +37,17 @@
 		<div class="article-content">${notice.content }</div>
 	</div>
 	<p class="article-comment margin-small">
-		<a class="btn-list button" href="notice.htm">목록</a> <a
-			class="btn-edit button" href="noticeEdit.htm?seq=${notice.seq }">수정</a>
-		<a class="btn-del button"
-			href="noticeDel.htm?seq=${notice.seq }&filesrc=${notice.filesrc}">삭제</a>
+		<a class="btn-list button" href="notice.htm">목록</a> 
+	
+		<sec:authorize access="isAuthenticated()">
+<!-- 			로그인한 사용자가 작성자인지 체크 -->
+			<sec:authentication property="principal" var="puser"/>
+			<c:if test="${notice.writer eq puser.memberVO.id }">
+				<a class="btn-edit button" href="noticeEdit.htm?seq=${notice.seq }">수정</a>
+			</c:if>
+		</sec:authorize>
+	
+		<a class="btn-del button" href="noticeDel.htm?seq=${notice.seq }&filesrc=${notice.filesrc}">삭제</a>
 		<script>
 							$(".btn-del button").on("click",function(e){
 								if(!confirm("정말 삭제?")){
